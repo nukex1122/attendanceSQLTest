@@ -1,5 +1,6 @@
 package com.example.mohsin.attendancesqltest;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ public class MainActivity extends AppCompatActivity {
 
     Subject ma101,ap101,ee101,co101,me105,en101,apLab,coLab,eeLab, lunch;
     Timetable timetable;
+    //AttendanceDBHelper attendanceDBHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +23,11 @@ public class MainActivity extends AppCompatActivity {
     private void initTimeTable() {
         Subject[] subjectList = {ma101,ap101,ee101,co101,me105,en101,apLab,coLab,eeLab, lunch};
         timetable = new Timetable(subjectList);
+
+        //attendanceDBHelper = new AttendanceDBHelper(this,subjectList);
+        //attendanceDBHelper.insertSubject();
+
+        //attendanceDBHelper.getData();
     }
 
     //TODO: Remove Hardcoded Data from here
@@ -74,4 +81,5 @@ public class MainActivity extends AppCompatActivity {
 
         return intList;
     }
+
 }

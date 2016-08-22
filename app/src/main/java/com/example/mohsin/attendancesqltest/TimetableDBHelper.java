@@ -1,5 +1,6 @@
 package com.example.mohsin.attendancesqltest;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -17,7 +18,7 @@ public class TimetableDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE TIMETABLE " +
+        /*db.execSQL("CREATE TABLE TIMETABLE " +
                     "(Day text primary key, 9to10 integer," +
                     " 9to10 integer," +
                     " 10to11 integer," +
@@ -27,7 +28,10 @@ public class TimetableDBHelper extends SQLiteOpenHelper {
                     " 2to3 integer," +
                     " 3to4 integer," +
                     " 4to5 integer)"
-        );
+        );*/
+
+        db.execSQL("create table timetable (" +
+                    "");
     }
 
     @Override
@@ -36,7 +40,13 @@ public class TimetableDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertSubject(Subject subject){
+    public boolean insertSubject(Subject subject){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
+        contentValues.put("", "");
+
+        db.insert("contacts", null, contentValues);
+        return true;
     }
 }
