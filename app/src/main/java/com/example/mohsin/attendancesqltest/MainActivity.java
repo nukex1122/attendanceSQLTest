@@ -1,8 +1,14 @@
 package com.example.mohsin.attendancesqltest;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -10,24 +16,48 @@ public class MainActivity extends AppCompatActivity {
 
     Subject ma101,ap101,ee101,co101,me105,en101,apLab,coLab,eeLab, lunch;
     Timetable timetable;
-    //AttendanceDBHelper attendanceDBHelper;
+    AttendanceDBHelper attendanceDBHelper;
+
+    Button viewTable, increment;
+    TextView counter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        viewTable = (Button) findViewById(R.id.tableView);
+        increment = (Button) findViewById(R.id.increment);
+        counter = (TextView) findViewById(R.id.textView);
+
+        viewTable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attendanceDBHelper.getData();
+            }
+        });
+
+        increment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attendanceDBHelper.incrementClasses("MA101");
+                updateCounter();
+            }
+        });
         initSubjects();
         initTimeTable();
+        updateCounter();
+
     }
 
     private void initTimeTable() {
         Subject[] subjectList = {ma101,ap101,ee101,co101,me105,en101,apLab,coLab,eeLab, lunch};
         timetable = new Timetable(subjectList);
 
-        //attendanceDBHelper = new AttendanceDBHelper(this,subjectList);
-        //attendanceDBHelper.insertSubject();
+        attendanceDBHelper = new AttendanceDBHelper(this,subjectList);
+        attendanceDBHelper.insertSubject();
 
-        //attendanceDBHelper.getData();
+        attendanceDBHelper.getData();
     }
 
     //TODO: Remove Hardcoded Data from here
@@ -80,6 +110,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return intList;
+    }
+
+    public void updateCounter(){
+        Cursor cursor = attendanceDBHelper.getDataFromCode("MA101");
+        cursor.moveToFirst();
+
+        String attended = cursor.getString(cursor.getColumnIndex("Attended"));
+
+        counter.setText(attended);
     }
 
 }
