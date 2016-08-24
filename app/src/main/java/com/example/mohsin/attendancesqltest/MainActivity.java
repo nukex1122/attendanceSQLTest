@@ -1,14 +1,19 @@
 package com.example.mohsin.attendancesqltest;
 
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Timetable timetable;
     AttendanceDBHelper attendanceDBHelper;
 
-    Button viewTable, increment;
+    ListView listView;
     TextView counter;
 
     @Override
@@ -26,27 +31,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewTable = (Button) findViewById(R.id.tableView);
-        increment = (Button) findViewById(R.id.increment);
-        counter = (TextView) findViewById(R.id.textView);
+        listView = (ListView) findViewById(R.id.subjectList);
 
-        viewTable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attendanceDBHelper.getData();
-            }
-        });
-
-        increment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attendanceDBHelper.incrementClasses("MA101");
-                updateCounter();
-            }
-        });
         initSubjects();
         initTimeTable();
-        updateCounter();
+
+        populateList();
 
     }
 
@@ -55,9 +45,10 @@ public class MainActivity extends AppCompatActivity {
         timetable = new Timetable(subjectList);
 
         attendanceDBHelper = new AttendanceDBHelper(this,subjectList);
-        attendanceDBHelper.insertSubject();
+        attendanceDBHelper.deleteTable();
 
         attendanceDBHelper.getData();
+
     }
 
     //TODO: Remove Hardcoded Data from here
@@ -110,15 +101,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return intList;
+
     }
 
-    public void updateCounter(){
-        Cursor cursor = attendanceDBHelper.getDataFromCode("MA101");
-        cursor.moveToFirst();
+    public void populateList(){
+        Cursor cursor = attendanceDBHelper.getData();
 
-        String attended = cursor.getString(cursor.getColumnIndex("Attended"));
+        Log.d("Attendance2", DatabaseUtils.dumpCursorToString(cursor));
 
-        counter.setText(attended);
+        SubjectListAdapter subjectListAdapter = new SubjectListAdapter(MainActivity.this,cursor,0);
+        listView.setAdapter(subjectListAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                Intent intent = new Intent(getApplicationContext(),SubjectActivity.class);
+
+                intent.putExtra("PERCENTAGE","50%");
+                intent.putExtra("CLASSES","4/50");
+
+                startActivity(intent);
+            }
+        });
     }
 
 }

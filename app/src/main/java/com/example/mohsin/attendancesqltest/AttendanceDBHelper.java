@@ -27,18 +27,20 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL("create table " + TABLE_NAME +" (" +
-                        "Code text primary key," +
+                        "_id integer primary key autoincrement," +
+                        "Code text," +
                         "Attended int," +
                         "Total int" +
                     ")");
 
         Log.d("SQL","Created");
 
+        insertSubject();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS contacts");
+        db.execSQL("DROP TABLE IF EXISTS attendance");
         onCreate(db);
     }
 
@@ -51,21 +53,29 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
             contentValues.put("Attended", subjects[i].getNoOfClassesAttended());
             contentValues.put("Total", subjects[i].getTotalClassTillNow());
             db.insert(TABLE_NAME, null, contentValues);
-
         }
 
         return true;
     }
 
-    public void getData(){
+    public Cursor getData(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + TABLE_NAME,null);
 
         Log.d("Attendance", DatabaseUtils.dumpCursorToString(res));
+        return res;
     }
 
-    public void incrementClasses (String code)
-    {
+    public void deleteTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Log.d("Drop","Dropped");
+        db.execSQL("DROP TABLE IF EXISTS attendance");
+        Log.d("Made","Made");
+        onCreate(db);
+
+    }
+    public void incrementAttendedClasses (String code) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor data = getDataFromCode(code);
@@ -78,7 +88,25 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
 
         contentValues.put("Code",code);
         contentValues.put("Attended", Integer.parseInt(attended) +1);
-        contentValues.put("Total", Integer.parseInt(Total) +1);
+        contentValues.put("Total", Integer.parseInt(Total));
+
+        db.update(TABLE_NAME, contentValues, "Code = ? ", new String[]{code});
+    }
+
+    public void incrementTotalClasses (String code) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor data = getDataFromCode(code);
+        data.moveToFirst();
+
+        String attended = data.getString(data.getColumnIndex("Attended"));
+        String Total = data.getString(data.getColumnIndex("Total"));
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("Code",code);
+        contentValues.put("Attended", Integer.parseInt(attended));
+        contentValues.put("Total", Integer.parseInt(Total) + 1);
 
         db.update(TABLE_NAME, contentValues, "Code = ? ", new String[]{code});
     }
