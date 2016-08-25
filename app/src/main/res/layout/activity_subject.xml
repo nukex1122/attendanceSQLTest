@@ -7,17 +7,84 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.example.mohsin.attendancesqltest.SubjectActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World"
-        android:id="@+id/percentageDetailed"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+        android:text="80%"
+        android:textSize="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:id="@+id/percentageDetailed"
+        android:layout_marginBottom="16dp"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World"
-        android:id="@+id/classDetailed"/>
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="@string/classes"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4/5"
+                android:textSize="20dp"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/classDetailed"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="@string/next_class"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tomorrow at 5pm"
+                android:layout_alignParentEnd="true"
+                android:textSize="20dp"
+                android:id="@+id/nextClass"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You can bunk 2 More Classes"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:id="@+id/bunkableClass"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="Add A Class"/>
+    </LinearLayout>
+
 </LinearLayout>
