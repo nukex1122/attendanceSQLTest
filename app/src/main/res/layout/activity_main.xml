@@ -36,7 +36,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="#2B3A42"
+        android:background="#D44637"
         android:layout_weight="2">
 
         <TextView
@@ -59,15 +59,12 @@
             android:gravity="center"/>
 
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="#BDD4DE"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/subjectList"
-        android:divider="#BDD4DE"
-        android:dividerHeight="2px"
-        android:layout_weight="1"></ListView>
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:layout_weight="1"/>
 </LinearLayout>

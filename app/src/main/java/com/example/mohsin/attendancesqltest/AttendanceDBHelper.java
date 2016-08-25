@@ -116,4 +116,9 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
         Cursor res = db.rawQuery("select * from " + TABLE_NAME + " where Code is \"" + Code + "\"",null);
         return res;
     }
+    public Cursor getDataFromId(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + TABLE_NAME + " where _id is \"" + id + "\"",null);
+        return res;
+    }
 }

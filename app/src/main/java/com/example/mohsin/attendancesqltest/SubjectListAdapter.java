@@ -2,6 +2,7 @@ package com.example.mohsin.attendancesqltest;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,16 @@ public class SubjectListAdapter extends CursorAdapter {
         super(context, c, flags);
         cursorInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       //  this.attendanceDBHelper = attendanceDBHelper;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = super.getView(position, convertView, parent);
+
+        String[] colorCodes = {"#00838F","#0288D1","#E74C3C"};
+
+        view.setBackgroundColor(Color.parseColor(colorCodes[position%3]));
+        return view;
     }
 
     @Override

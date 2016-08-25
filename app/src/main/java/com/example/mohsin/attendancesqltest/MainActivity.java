@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     AttendanceDBHelper attendanceDBHelper;
 
     ListView listView;
-    TextView counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateList(){
         Cursor cursor = attendanceDBHelper.getData();
-
-        Log.d("Attendance2", DatabaseUtils.dumpCursorToString(cursor));
-
         SubjectListAdapter subjectListAdapter = new SubjectListAdapter(MainActivity.this,cursor,0);
         listView.setAdapter(subjectListAdapter);
 
@@ -118,10 +115,18 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(),SubjectActivity.class);
 
+                Cursor cursor1 = attendanceDBHelper.getDataFromId(position+1);
+                DatabaseUtils.dumpCursorToString(cursor1);
+                cursor1.moveToFirst();
+
+                String attended = cursor1.getString(cursor1.getColumnIndex("Attended"));
+                String total    = cursor1.getString(cursor1.getColumnIndex("Total"));
+
                 intent.putExtra("PERCENTAGE","50%");
-                intent.putExtra("CLASSES","4/50");
+                intent.putExtra("CLASSES",attended + "/" + total);
 
                 startActivity(intent);
+
             }
         });
     }
