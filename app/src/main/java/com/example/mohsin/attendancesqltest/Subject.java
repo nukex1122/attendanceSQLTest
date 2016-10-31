@@ -12,11 +12,16 @@ public class Subject {
     private int noOfClassesAttended;
     private int totalClassTillNow;
 
-    public Subject(String code, String name, int noOfClassesAttended, int totalClassTillNow) {
+    AttendanceDBHelper attendanceDBHelper;
+
+    public Subject(String code, String name, int noOfClassesAttended, int totalClassTillNow, AttendanceDBHelper attendanceDBHelper) {
         this.code = code;
         Name = name;
         this.noOfClassesAttended = noOfClassesAttended;
         this.totalClassTillNow = totalClassTillNow;
+
+        this.attendanceDBHelper = attendanceDBHelper;
+
     }
 
     public String getCode() {
@@ -40,6 +45,9 @@ public class Subject {
     }
 
     public int getNoOfClassesAttended() {
+
+        attendanceDBHelper.getNoOfAttendedClasses(code);
+
         return noOfClassesAttended;
     }
 

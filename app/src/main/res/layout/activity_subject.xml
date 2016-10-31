@@ -83,6 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
+            android:id="@+id/datePicker"
             style="@style/Widget.AppCompat.Button.Colored"
             android:text="Add A Class"/>
     </LinearLayout>

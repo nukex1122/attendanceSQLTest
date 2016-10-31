@@ -30,3 +30,9 @@ app/app.iml
 *.lock
 
 *.iml
+
+*.bin
+
+*.lock
+
+*.bin

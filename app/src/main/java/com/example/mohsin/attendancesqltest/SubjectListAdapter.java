@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by mohsin on 24/08/16.
  */
@@ -44,10 +46,20 @@ public class SubjectListAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView textView = (TextView) view.findViewById(R.id.subject_code2);
+        TextView textView1 = (TextView) view.findViewById(R.id.percentage2);
 
-        String attended = cursor.getString(cursor.getColumnIndex("Code"));
+        String code = cursor.getString(cursor.getColumnIndex("Code"));
 
-        textView.setText(attended);
+        int attended = Integer.parseInt( cursor.getString(cursor.getColumnIndex("Attended")) );
+        int total    = Integer.parseInt( cursor.getString(cursor.getColumnIndex("Total")) );
+
+        int percentage = 0;
+
+        if (total !=0 ){
+            percentage = (attended * 100)/total;
+        }
+        textView.setText(code);
+        textView1.setText(percentage + "%");
     }
 
 

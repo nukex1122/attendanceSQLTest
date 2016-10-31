@@ -23,6 +23,9 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
         this.subjects = subjects;
     }
 
+    public AttendanceDBHelper(Context context){
+        super(context,DATABASE_NAME,null,1);
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -75,6 +78,7 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
         onCreate(db);
 
     }
+
     public void incrementAttendedClasses (String code) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -111,11 +115,20 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
         db.update(TABLE_NAME, contentValues, "Code = ? ", new String[]{code});
     }
 
+    public void getNoOfAttendedClasses(String code){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor res = db.rawQuery("select Attended from " + TABLE_NAME + " where Code is \"" + code + "\"",null );
+
+        Log.d(TABLE_NAME,DatabaseUtils.dumpCursorToString(res));
+    }
+
     public Cursor getDataFromCode(String Code){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + TABLE_NAME + " where Code is \"" + Code + "\"",null);
         return res;
     }
+
     public Cursor getDataFromId(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + TABLE_NAME + " where _id is \"" + id + "\"",null);

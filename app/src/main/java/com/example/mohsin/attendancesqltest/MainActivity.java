@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,18 +27,30 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        init();
+
         listView = (ListView) findViewById(R.id.subjectList);
 
         initSubjects();
         initTimeTable();
+    }
 
+    protected void init(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("tan","Resumed Main Activity");
         populateList();
-
     }
 
     private void initTimeTable() {
@@ -45,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         timetable = new Timetable(subjectList);
 
         attendanceDBHelper = new AttendanceDBHelper(this,subjectList);
-        attendanceDBHelper.deleteTable();
+        //attendanceDBHelper.deleteTable();
 
         attendanceDBHelper.getData();
 
@@ -53,18 +66,18 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO: Remove Hardcoded Data from here
     public void initSubjects(){
-        ma101 = new Subject("MA101","Mathematics - I",0,0);
-        ap101 = new Subject("AP101","PHYSICS-I",0,0);
-        ee101 = new Subject("EE101","BASIC ELECTRICAL ENGINEERING",0,0);
-        co101 = new Subject("CO101","PROGRAMMING FUNDAMENTALS",0,0);
-        me105 = new Subject("ME10", "ENGINEERING GRAPHICS",0,0);
-        en101 = new Subject("EN101", "INTRODUCTION TO ENVIRONMENTAL SCIENCE",0,0);
+        ma101 = new Subject("MA101","Mathematics - I",0,0,attendanceDBHelper);
+        ap101 = new Subject("AP101","PHYSICS-I",0,0,attendanceDBHelper);
+        ee101 = new Subject("EE101","BASIC ELECTRICAL ENGINEERING",0,0,attendanceDBHelper);
+        co101 = new Subject("CO101","PROGRAMMING FUNDAMENTALS",0,0,attendanceDBHelper);
+        me105 = new Subject("ME10", "ENGINEERING GRAPHICS",0,0,attendanceDBHelper);
+        en101 = new Subject("EN101", "INTRODUCTION TO ENVIRONMENTAL SCIENCE",0,0,attendanceDBHelper);
 
-        apLab = new Subject("AP101(LAB)","AP Lab",0,0);
-        coLab = new Subject("CO101(LAB)","CO Lab",0,0);
-        eeLab = new Subject("EE101(LAB)","EE Lab",0,0);
+        apLab = new Subject("AP101(LAB)","AP Lab",0,0,attendanceDBHelper);
+        coLab = new Subject("CO101(LAB)","CO Lab",0,0,attendanceDBHelper);
+        eeLab = new Subject("EE101(LAB)","EE Lab",0,0,attendanceDBHelper);
 
-        lunch = new Subject("Lunch","Lunch",0,0);
+        lunch = new Subject("Lunch","Lunch",0,0,attendanceDBHelper);
 
         int[] maTimeBracket = {10,16,17,30};
         int[] apTimeBracket = {11,31,34};
@@ -105,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateList(){
-        Cursor cursor = attendanceDBHelper.getData();
+        final Cursor cursor = attendanceDBHelper.getData();
         SubjectListAdapter subjectListAdapter = new SubjectListAdapter(MainActivity.this,cursor,0);
         listView.setAdapter(subjectListAdapter);
 
@@ -119,11 +132,21 @@ public class MainActivity extends AppCompatActivity {
                 DatabaseUtils.dumpCursorToString(cursor1);
                 cursor1.moveToFirst();
 
-                String attended = cursor1.getString(cursor1.getColumnIndex("Attended"));
-                String total    = cursor1.getString(cursor1.getColumnIndex("Total"));
+                int attended = Integer.parseInt( cursor1.getString(cursor1.getColumnIndex("Attended")) );
+                int total    = Integer.parseInt( cursor1.getString(cursor1.getColumnIndex("Total")) );
+                String code = cursor1.getString(cursor1.getColumnIndex("Code"));
 
-                intent.putExtra("PERCENTAGE","50%");
-                intent.putExtra("CLASSES",attended + "/" + total);
+                int percentage = 0;
+
+                if (total !=0 ){
+                    percentage = (attended * 100)/total;
+                }
+                intent.putExtra("CODE",code);
+                intent.putExtra("PERCENTAGE",percentage);
+                intent.putExtra("CLASSES",attended+"/"+total);
+
+                intent.putExtra("ATTENDED",attended);
+                intent.putExtra("TOTAL",total);
 
                 startActivity(intent);
 
