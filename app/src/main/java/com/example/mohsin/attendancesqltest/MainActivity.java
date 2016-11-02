@@ -22,12 +22,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Subject ma101,ap101,ee101,co101,me105,en101,apLab,coLab,eeLab, lunch;
+
+    int totalClasses=0,attendedClasses=0;
+
     Timetable timetable;
     AttendanceDBHelper attendanceDBHelper;
 
     ListView listView;
 
     Toolbar toolbar;
+    TextView overallAttendance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,21 @@ public class MainActivity extends AppCompatActivity {
 
         initSubjects();
         initTimeTable();
+        /*
+        overallAttendance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(getApplicationContext(),"Fuck You Bruh",Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });*/
+        getTotalAndSetPercentage();
     }
 
     protected void init(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        overallAttendance = (TextView) findViewById(R.id.overallAttendance);
     }
     @Override
     protected void onResume() {
@@ -136,11 +150,14 @@ public class MainActivity extends AppCompatActivity {
                 int total    = Integer.parseInt( cursor1.getString(cursor1.getColumnIndex("Total")) );
                 String code = cursor1.getString(cursor1.getColumnIndex("Code"));
 
+
                 int percentage = 0;
 
                 if (total !=0 ){
                     percentage = (attended * 100)/total;
                 }
+
+
                 intent.putExtra("CODE",code);
                 intent.putExtra("PERCENTAGE",percentage);
                 intent.putExtra("CLASSES",attended+"/"+total);
@@ -152,6 +169,26 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    void getTotalAndSetPercentage(){
+
+        Cursor cursor1 = attendanceDBHelper.getData();
+        while (cursor1.moveToNext()){
+
+            Log.d("Test",DatabaseUtils.dumpCursorToString(cursor1));
+            int attended = Integer.parseInt( cursor1.getString(cursor1.getColumnIndex("Attended")) );
+            int total    = Integer.parseInt( cursor1.getString(cursor1.getColumnIndex("Total")) );
+
+            totalClasses += total;
+            attendedClasses +=attended;
+
+        }
+        cursor1.close();
+
+        overallAttendance.setText((attendedClasses*100)/totalClasses + "%");
+
     }
 
 }

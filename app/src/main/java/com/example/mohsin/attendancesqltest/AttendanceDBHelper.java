@@ -123,6 +123,24 @@ public class AttendanceDBHelper extends SQLiteOpenHelper{
         Log.d(TABLE_NAME,DatabaseUtils.dumpCursorToString(res));
     }
 
+    public void clearAttendanceOfSubjectWithCode(String code){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor data = getDataFromCode(code);
+        data.moveToFirst();
+
+        String attended = data.getString(data.getColumnIndex("Attended"));
+        String Total = data.getString(data.getColumnIndex("Total"));
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("Code",code);
+        contentValues.put("Attended",0);
+        contentValues.put("Total", 0);
+
+        db.update(TABLE_NAME, contentValues, "Code = ? ", new String[]{code});
+
+    }
     public Cursor getDataFromCode(String Code){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + TABLE_NAME + " where Code is \"" + Code + "\"",null);
